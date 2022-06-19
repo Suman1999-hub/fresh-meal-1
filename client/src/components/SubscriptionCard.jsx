@@ -9,6 +9,7 @@ export const SubscriptionCard = ({ timing, price, type, id }) => {
 
   const checkout = () => {
     const data = {
+      count: timing,
       menuId: id,
       price: price,
     };

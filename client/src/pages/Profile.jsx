@@ -62,11 +62,20 @@ export const Profile = () => {
               </div>
               <div>
                 <p className="text-sm uppercase font-semibold">Subscription</p>
-                <p className="text-xl mt-1"></p>
+                {profile.data.menu[0].timing && (
+                  <p className="text-xl mt-1">
+                    {profile.data.menu[0].timing} days{' '}
+                    {profile.data.menu[0].type} meal
+                  </p>
+                )}
               </div>
               <div>
                 <p className="text-sm uppercase font-semibold">Address</p>
                 <p className="text-xl mt-1">{profile.data.rows[0].address}</p>
+              </div>
+              <div>
+                <p className="text-sm uppercase font-semibold">Days Left</p>
+                <p className="text-xl mt-1">{profile.data.dayLeft}</p>
               </div>
             </div>
           </div>

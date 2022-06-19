@@ -59,8 +59,17 @@ module.exports = {
       const result = await pool.query(
         `select * from users where users.id = '${id}'`
       );
+      const subscriptionRes = await pool.query(
+        `select * from subscriptions where user_id = '${id}'`
+      );
+      const menuId = subscriptionRes.rows && subscriptionRes.rows[0].menu_id;
+      const dayLeft = subscriptionRes.rows && subscriptionRes.rows[0].count;
 
-      res.json({ rows: result.rows });
+      const menu = await pool.query(
+        `select * from menu where id = '${menuId}'`
+      );
+
+      res.json({ rows: result.rows, menu: menu.rows, dayLeft: dayLeft });
     } catch (err) {
       console.log(err.message);
       next(err);

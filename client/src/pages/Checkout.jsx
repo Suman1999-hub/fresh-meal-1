@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
 import { useContext } from 'react';
-import { checkoutDataContext } from '../App';
+import { checkoutDataContext, userContext } from '../App';
 import { axiosInstance } from '../axiosInstance';
 import { Footer } from '../components/Footer';
 import { Header } from '../components/Header';
@@ -14,6 +14,7 @@ export const Checkout = () => {
   });
   const [loading, setLoading] = useState(false);
   let checkoutContext = useContext(checkoutDataContext);
+  let userDataContext = useContext(userContext);
 
   const checkOut = () => {
     const script = document.createElement('script');
@@ -41,6 +42,9 @@ export const Checkout = () => {
           order_id: order_id,
           handler: async function (response) {
             const result = await axiosInstance.post('/payment/pay-order', {
+              count: checkoutContext.checkoutData.count,
+              menuId: checkoutContext.checkoutData.menuId,
+              userId: userDataContext.user.id,
               amount: amount,
               razorpayPaymentId: response.razorpay_payment_id,
               razorpayOrderId: response.razorpay_order_id,

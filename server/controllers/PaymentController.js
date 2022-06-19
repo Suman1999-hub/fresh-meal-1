@@ -1,4 +1,5 @@
 const Razorpay = require('razorpay');
+const pool = require('../db.config');
 
 module.exports = {
   createOrder: async (req, res, next) => {
@@ -20,8 +21,16 @@ module.exports = {
   },
   payOrder: async (req, res, next) => {
     try {
-      const { amount, razorpayPaymentId, razorpayOrderId, razorpaySignature } =
-        req.body;
+      const {
+        amount,
+        razorpayPaymentId,
+        razorpayOrderId,
+        razorpaySignature,
+        menuId,
+        userId,
+        count,
+      } = req.body;
+      console.log(req.body);
       // const newOrder = Order({
       //   isPaid: true,
       //   amount: amount,
@@ -32,6 +41,11 @@ module.exports = {
       //   },
       // });
       // await newOrder.save();
+      const result = await pool.query(
+        `INSERT INTO subscriptions (user_id, menu_id, count, value)
+            VALUES
+          ('${userId}', '${menuId}', '${count}', '${amount / 100}' );`
+      );
       console.log('payment successful');
       res.send({
         msg: 'Payment was successfull',
