@@ -1,11 +1,12 @@
-import React from 'react';
-import { MdAccountCircle } from 'react-icons/md';
-import { useQuery } from 'react-query';
-import { useContext } from 'react';
-import { userContext } from '../App';
-import { Footer } from '../components/Footer';
-import { Header } from '../components/Header';
-import { axiosInstance } from '../axiosInstance';
+import React, { useState } from "react";
+import { MdAccountCircle } from "react-icons/md";
+import { useQuery } from "react-query";
+import { useContext } from "react";
+import { userContext } from "../App";
+import { Footer } from "../components/Footer";
+import { Header } from "../components/Header";
+import { axiosInstance } from "../axiosInstance";
+import Modal from "react-modal";
 
 const fetchProfile = async ({ queryKey }) => {
   const userId = queryKey[1];
@@ -19,7 +20,15 @@ export const Profile = () => {
     data: profile,
     isLoading,
     error,
-  } = useQuery(['profile', context.user.id], fetchProfile);
+  } = useQuery(["profile", context.user.id], fetchProfile);
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [newData, setNewData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    address: '',
+  });
 
   if (isLoading) return null;
 
@@ -36,6 +45,9 @@ export const Profile = () => {
             <button
               className="bg-red-500 px-3 py-2 mt-4 md:ml-3 rounded-md shadow-lg 
             shadow-red-500/50 font-semibold text-sm md:text-base ml-auto"
+              onClick={() => {
+                setModalOpen(true);
+              }}
             >
               Edit
             </button>
@@ -64,7 +76,7 @@ export const Profile = () => {
                 <p className="text-sm uppercase font-semibold">Subscription</p>
                 {profile.data.menu[0].timing && (
                   <p className="text-xl mt-1">
-                    {profile.data.menu[0].timing} days{' '}
+                    {profile.data.menu[0].timing} days{" "}
                     {profile.data.menu[0].type} meal
                   </p>
                 )}
@@ -81,6 +93,43 @@ export const Profile = () => {
           </div>
         </div>
       </main>
+      <Modal isOpen={modalOpen} style={{ maxWidth: "500px" }}>
+        <h1 className="text-xl font-semibold">Edit Profile</h1>
+        <form className="flex flex-col gap-5 mt-5">
+          <input
+            defaultValue={profile.data.rows[0].name}
+            className="border px-2 py-3"
+          />
+          <input
+            defaultValue={profile.data.rows[0].email}
+            className="border px-2 py-3"
+          />
+          <input
+            defaultValue={profile.data.rows[0].phone}
+            className="border px-2 py-3"
+          />
+          <input
+            defaultValue={profile.data.rows[0].address}
+            className="border px-2 py-3"
+          />
+        </form>
+        <div className="mt-auto">
+          <button
+            className="bg-green-500 px-3 py-2 mt-4 mr-3 rounded-md
+              font-semibold text-sm md:text-base ml-auto text-white"
+            onClick={() => {}}
+          >
+            Save
+          </button>
+          <button
+            className="bg-red-500 px-3 py-2 mt-4 mr-3 rounded-md
+              font-semibold text-sm md:text-base ml-auto text-white"
+            onClick={() => {setModalOpen(false)}}
+          >
+            Cancel
+          </button>
+        </div>
+      </Modal>
       <Footer />
     </>
   );

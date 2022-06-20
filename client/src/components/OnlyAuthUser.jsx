@@ -16,6 +16,9 @@ export const OnlyAuthUser = ({ children }) => {
   if (!context.user) {
     return <Navigate to="/" replace state={{ from: location }} />;
   }
+  if(context.user && context.user.email !== '1999sumanrana@gmail.com') {
+    return <Navigate to="/" replace state={{ from: location }} />
+  }
 
   return children;
 };

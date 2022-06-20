@@ -1,9 +1,23 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { MdAccountCircle, MdDelete } from 'react-icons/md';
+import { useQuery } from 'react-query';
+import { userContext } from '../App';
+import { axiosInstance } from '../axiosInstance';
 import { Footer } from '../components/Footer';
 import { Header } from '../components/Header';
 
+const fetchSubscription = async () => {
+  return await axiosInstance.get(`/api/getSubscriptions`);
+};
+
 export const Admin = () => {
+  let context = useContext(userContext);
+  const {
+    data,
+    isLoading,
+    error,
+  } = useQuery(["admin"], fetchSubscription);
+
   return (
     <>
       <Header />
@@ -16,7 +30,7 @@ export const Admin = () => {
             <h1 className="text-3xl font-semibold">Admin Panel</h1>
             <button
               className="bg-red-500 px-3 py-2 mt-4 md:ml-3 rounded-md shadow-lg 
-            shadow-red-500/50 font-semibold text-sm md:text-base ml-auto"
+            shadow-red-500/50 font-semibold text-sm md:text-base ml-auto hidden"
             >
               Edit Menu
             </button>
@@ -28,19 +42,19 @@ export const Admin = () => {
                   <MdAccountCircle className="text-5xl text-green-500" />
                 </div>
               </div>
-              <p className="text-2xl font-semibold">Anupam Das</p>
+              <p className="text-2xl font-semibold">{context.user.name}</p>
             </div>
             <div className="mt-10 grid grid-cols-3 gap-5">
               <div className="bg-yellow-600 rounded-md h-32 text-center p-5">
-                <p className="text-6xl font-semibold mb-3">100</p>
+                <p className="text-6xl font-semibold mb-3">{JSON.stringify(data?.data?.totalSubscriptions)}</p>
                 <p className="font-semibold">Total Order</p>
               </div>
               <div className="bg-green-600 rounded-md h-32 text-center p-5">
-                <p className="text-6xl font-semibold mb-3">70</p>
+                <p className="text-6xl font-semibold mb-3">{JSON.stringify(data?.data?.totalMixedSubscriptions)}</p>
                 <p className="font-semibold">Veg Meal</p>
               </div>
               <div className="bg-red-600 rounded-md h-32 text-center p-5">
-                <p className="text-6xl font-semibold mb-3">30</p>
+                <p className="text-6xl font-semibold mb-3">{JSON.stringify(data?.data?.totalVegSubscriptions)}</p>
                 <p className="font-semibold">Mixed Meal</p>
               </div>
             </div>
@@ -48,26 +62,21 @@ export const Admin = () => {
             <div>
               <table className="w-full">
                 <tr className="border h-10 overflow-scroll">
-                  <th className="w-10">Action</th>
-                  <th className="w-10">Order Id</th>
-                  <th className="w-10">Name</th>
-                  <th className="w-10">Address</th>
-                  <th className="w-10">Menu</th>
+                  <th className="w-10">User Id</th>
+                  <th className="w-10">Timing</th>
+                  <th className="w-10">Cost</th>
+                  <th className="w-10">Menu Id</th>
                 </tr>
+                {!isLoading && data.data.rows.map(item => (
+
                 <tr className="text-center border overflow-scroll h-10">
+                  <td className="w-10">{JSON.stringify(item.user_id)}</td>
+                  <td className="w-10">{item?.count}</td>
                   <td className="w-10">
-                    <button className="rounded">
-                      <MdDelete className="text-2xl text-red-500" />
-                    </button>
+                    {item?.value}
                   </td>
-                  <td className="w-10">Maria Anders</td>
-                  <td className="w-10">Germany</td>
-                  <td className="w-10">
-                    398, Ramkrishnapur Rd, near Jagadighata Market, Barasat,
-                    Kolkata, West Bengal 700125
-                  </td>
-                  <td className="w-10">Germany</td>
-                </tr>
+                  <td className="w-10">{item?.menu_id}</td>
+                </tr> ))}
               </table>
             </div>
           </div>

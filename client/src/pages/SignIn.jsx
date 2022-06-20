@@ -5,6 +5,7 @@ import { useContext } from 'react';
 import { userContext } from '../App';
 import { axiosInstance } from '../axiosInstance';
 import { Header } from '../components/Header';
+import { toast } from 'react-toastify';
 
 export const Signin = () => {
   const [formData, setFormData] = useState({
@@ -24,9 +25,13 @@ export const Signin = () => {
       const { setUser } = context;
       setUser(user);
       localStorage.setItem('user', JSON.stringify(user));
-      navigate('/');
+      toast.success('Signin successfully');
+      setTimeout(() => {
+        navigate('/');
+      }, 2000);
     } catch (error) {
-      console.error('Error happend : ' + error);
+      toast.error(error.message);
+      console.error('Wrong Email/Password');
     }
   };
 

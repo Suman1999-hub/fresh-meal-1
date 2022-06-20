@@ -20,6 +20,8 @@ import { useEffect } from 'react';
 import { UserProtected } from './components/UserProtected';
 import { OnlyAuthUser } from './components/OnlyAuthUser';
 import { Checkout } from './pages/Checkout';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const queryClient = new QueryClient();
 
@@ -95,6 +97,7 @@ function App() {
               </Routes>
             </BrowserRouter>
           </div>
+          <ToastContainer />
         </checkoutDataContext.Provider>
       </userContext.Provider>
     </QueryClientProvider>

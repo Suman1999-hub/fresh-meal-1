@@ -1,12 +1,15 @@
 import React from 'react';
 import { useState } from 'react';
 import { useContext } from 'react';
+import { toast } from 'react-toastify';
 import { checkoutDataContext, userContext } from '../App';
 import { axiosInstance } from '../axiosInstance';
 import { Footer } from '../components/Footer';
 import { Header } from '../components/Header';
 
 export const Checkout = () => {
+  
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -16,7 +19,9 @@ export const Checkout = () => {
   let checkoutContext = useContext(checkoutDataContext);
   let userDataContext = useContext(userContext);
 
-  const checkOut = () => {
+  const checkOut = (event) => {
+    event.preventDefault()
+
     const script = document.createElement('script');
     script.src = 'https://checkout.razorpay.com/v1/checkout.js';
     script.onerror = () => {
@@ -50,7 +55,8 @@ export const Checkout = () => {
               razorpayOrderId: response.razorpay_order_id,
               razorpaySignature: response.razorpay_signature,
             });
-            alert(result.data.msg);
+            // alert(result.data.msg);
+            toast.success('Payment successfull');
           },
           //   prefill: {
           //     name: 'example name',
@@ -84,11 +90,12 @@ export const Checkout = () => {
         flex flex-col border-green-500 border-2 pb-16 mt-10"
         >
           <p className="text-2xl font-semibold">Checkout</p>
-          <div className="flex flex-col gap-8 mt-20">
+          <form className="flex flex-col gap-8 mt-20" onSubmit={checkOut}>
             <input
               className="px-3 py-5 h-11 max-w-sm rounded-md text-black"
               placeholder="Full Name"
               defaultValue={formData.name}
+              required
               onChange={(e) =>
                 setFormData({ ...formData, name: e.target.value })
               }
@@ -97,6 +104,7 @@ export const Checkout = () => {
               className="px-3 py-5 h-11 max-w-sm rounded-md text-black"
               placeholder="Email"
               defaultValue={formData.email}
+              required
               onChange={(e) =>
                 setFormData({ ...formData, email: e.target.value })
               }
@@ -105,6 +113,7 @@ export const Checkout = () => {
               className="px-3 py-5 h-11 max-w-sm rounded-md text-black"
               placeholder="Phone"
               defaultValue={formData.phone}
+              required
               onChange={(e) =>
                 setFormData({ ...formData, phone: e.target.value })
               }
@@ -123,7 +132,7 @@ export const Checkout = () => {
             >
               Pay
             </button>
-          </div>
+          </form>
         </div>
       </main>
       <Footer />
